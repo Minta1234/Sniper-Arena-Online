@@ -1,10 +1,15 @@
 import React from "react";
-import { KeyboardProvider } from "react-native-keyboard-controller";
+import { Platform } from "react-native";
 
-export default function KeyboardProviderWrapper({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return <KeyboardProvider>{children}</KeyboardProvider>;
+let KeyboardProviderWrapper: React.FC<{ children: React.ReactNode }>;
+
+if (Platform.OS === "web") {
+  // Web fallback: ไม่ใช้ native KeyboardProvider
+  KeyboardProviderWrapper = ({ children }) => <>{children}</>;
+} else {
+  // Native (iOS/Android)
+  const { KeyboardProvider } = require("react-native-keyboard-controller");
+  KeyboardProviderWrapper = ({ children }) => <KeyboardProvider>{children}</KeyboardProvider>;
 }
+
+export default KeyboardProviderWrapper;
